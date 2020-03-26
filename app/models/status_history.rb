@@ -1,0 +1,3 @@
+class StatusHistory < ApplicationRecord
+
+end
