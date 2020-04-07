@@ -11,6 +11,7 @@ gem "dynomite"
 
 gem 'uuid', '~> 2.3', '>= 2.3.8'
 gem 'state_machines-activerecord'
+gem 'dalli'
 
 # development and test groups are not bundled as part of the deployment
 group :development, :test do

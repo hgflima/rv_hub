@@ -1,12 +1,7 @@
 describe TransactionsController, type: :controller do
 
   before(:each) do
-    @valid_transaction = Transaction.new({
-      carrier: "vivo",
-      area_code: "11",
-      cell_phone_number: "994145350",
-      amount: 1000
-    })
+    @valid_transaction = Transaction.new(payload('valid_transaction'))
   end
 
   it "returns correct transaction using uuid as unique identifier" do

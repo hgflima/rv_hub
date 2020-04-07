@@ -61,5 +61,7 @@ Jets.application.configure do
   # testing suite output readable.
   # config.logger = Jets::Logger.new($strerr)
 
+
   config.controllers.default_protect_from_forgery = false
+
 end

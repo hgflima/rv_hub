@@ -12,8 +12,6 @@ Jets.boot
 
 require "jets/spec_helpers"
 
-
-
 module Helpers
   def payload(name)
     JSON.load(IO.read("spec/fixtures/payloads/#{name}.json"))

@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2020_03_26_153002) do
 
-  create_table "status_histories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "status_histories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "status"
     t.bigint "transaction_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2020_03_26_153002) do
     t.index ["transaction_id"], name: "index_status_histories_on_transaction_id"
   end
 
-  create_table "transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "carrier"
     t.string "area_code"
     t.string "cell_phone_number"
