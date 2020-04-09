@@ -23,16 +23,20 @@ class ApplicationPresenter
   end
 
   def error
-    {
-      'code': @code,
-      'errors': (@object.nil? or @object.errors.nil?) ? nil : @object.errors.messages
-    }
+    error           = {}
+    error[:code]    = @code
+    error[:errors]  = @object.errors.messages if !(@object.nil? or @object.errors.nil?)
+    error
   end
 
   def get_http_status
     STATUSES[@code]
   end
 
+  # O presenter deve considerar valido os objetos que:
+  # 1. Não forem nil
+  # 2. Model valido (nenhum erro de validação)
+  # 3. O http status code for da familia 2xx
   def valid?
     !@object.nil? and @object.valid? and (get_http_status < 300)
   end

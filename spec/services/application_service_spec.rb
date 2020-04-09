@@ -4,14 +4,14 @@ describe ApplicationService do
     @valid_transaction = Transaction.new(payload('valid_transaction'))
   end
 
-  it "returned created when idempotency-key dont exists" do
+  it "will return created when idempotency-key dont exists" do
     service = ApplicationService.new(@valid_transaction)
     transaction, code = service.create(UUID.new.generate)
     expect(code).to eq(:created)
     @valid_transaction.destroy
   end
 
-  it "returned loaded when idempotency-key exists" do
+  it "will return loaded when idempotency-key exists" do
 
     idempotency_key = UUID.new.generate
     service = ApplicationService.new(@valid_transaction)
@@ -23,7 +23,7 @@ describe ApplicationService do
 
   end
 
-  it "returned validation_error when model is not valid" do
+  it "will return validation_error when model is not valid" do
     @valid_transaction.amount = 0
     service = ApplicationService.new(@valid_transaction)
     transaction, code = service.create(@valid_transaction)

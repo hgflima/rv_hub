@@ -110,8 +110,6 @@ describe TransactionsController, type: :controller do
     expect(response.status).to eq 422
 
     parsed_response = JSON.parse(response.body)
-    pp parsed_response
-
     expect(parsed_response['code']).to eq('transition_not_accepted')
 
   end
