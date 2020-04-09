@@ -1,5 +1,7 @@
 class TransactionsController < ApplicationController
+  authorizer "main#RvHubCognito"
   before_action :set_transaction, only: [:show, :delete, :capture]
+  before_action :set_account, only: [:create]
 
   # POST /transactions/:transaction_id/capture
   def capture
