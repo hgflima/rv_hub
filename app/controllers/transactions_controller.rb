@@ -1,42 +1,50 @@
 class TransactionsController < ApplicationController
   before_action :set_transaction, only: [:show, :delete, :capture]
 
-  # POST /transactions/:uuid/capture
+  # POST /transactions/:transaction_id/capture
   def capture
-    @transaction.capture!
-    presenter = TransactionPresenter.new(@transaction)
-    render json: presenter.success
+    service           = TransactionService.new()
+    transaction, code = service.capture(params[:transaction_id])
+    presenter         = TransactionPresenter.new(transaction, code)
+    render presenter.as_json
   end
 
   # GET /transactions
   def index
-    @transactions = Transaction.all
-    render json: @transactions.map { |tx| TransactionPresenter.new(tx).success }
+    service             = TransactionService.new()
+    transactions, code  = service.find_all
+    presenter           = TransactionPresenter.new(transactions, code)
+    render presenter.as_json_collection
   end
 
-  # GET /transactions/:uuid
+  # GET /transactions/:transaction_id
   def show
-    presenter = TransactionPresenter.new(@transaction)
-    render json: presenter.success
+    service           = TransactionService.new()
+    transaction, code = service.find(params[:transaction_id])
+    presenter         = TransactionPresenter.new(transaction, code)
+    render presenter.as_json
   end
 
   # POST /transactions
   def create
-    @transaction = Transaction.new(transaction_params)
 
-    if @transaction.authorize!
-      presenter = TransactionPresenter.new(@transaction)
-      render json: presenter.success, status: :created
-    else
-      render json: @transaction.errors, status: :unprocessable_entity
-    end
+    transaction       = Transaction.new(transaction_params)
+    idempotency_key   = headers['idempotency-key']
+
+    service           = TransactionService.new(transaction)
+    transaction, code = service.authorize(idempotency_key)
+
+    presenter         = TransactionPresenter.new(transaction, code)
+    render presenter.as_json
+
   end
 
-  # DELETE /transactions/:uuid
+  # DELETE /transactions/:transaction_id
   def delete
-    @transaction.refund!
-    presenter = TransactionPresenter.new(@transaction)
-    render json: presenter.success
+    service           = TransactionService.new()
+    transaction, code = service.refund(params[:transaction_id])
+    presenter         = TransactionPresenter.new(transaction, code)
+    render presenter.as_json
   end
 
   private

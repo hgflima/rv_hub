@@ -59,7 +59,7 @@ Jets.application.configure do
   # By default logger needs to log to $stderr for CloudWatch to receive Lambda messages, but for
   # local testing environment you may want to log these messages to 'test.log' file to keep your
   # testing suite output readable.
-  # config.logger = Jets::Logger.new($strerr)
+  config.logger = Jets::Logger.new($strerr)
 
 
   config.controllers.default_protect_from_forgery = false

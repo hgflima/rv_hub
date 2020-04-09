@@ -1,25 +1,23 @@
-class TransactionPresenter
+class TransactionPresenter < ApplicationPresenter
 
-  def initialize(transaction)
-    @transaction = transaction
-  end
+  def success(object = nil)
 
-  def success
-    uuid = @transaction.uuid
-    json = @transaction.attributes.except('uuid')
+    obj  = object.nil? ? @object : object
+    uuid = obj.uuid
+    json = obj.attributes.except('uuid')
     json['id'] = uuid
-    json['statuses'] = @transaction.status_history
+    json['statuses'] = obj.status_history
                                     .map { |h|
                                     h.attributes.except('id',
                                                         'transaction_id',
                                                         'updated_at') }
-    json['links'] = get_links
+    json['links'] = get_links(obj)
     return json
   end
 
-  def get_links
-    links = HYPERMEDIA[@transaction.status]
-      .map { |h| { "href" => h['href'].gsub(":transaction_id", @transaction.uuid),
+  def get_links(obj)
+    links = HYPERMEDIA[obj.status]
+      .map { |h| { "href" => h['href'].gsub(":transaction_id", obj.uuid),
                                             "rel"  => h['rel'],
                                             "type" => h['type']} }
     return links

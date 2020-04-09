@@ -1,22 +1,22 @@
 class ApplicationService
 
-  def initialize(model)
+  def initialize(model = nil)
     @model = model
   end
 
   def create(idempotency_key)
 
-    return [:validation_error, @model.errors] if !@model.valid?
+    return [@model, :validation_error] if !@model.valid?
 
     @cache        = CacheClient.new('idempotency_key')
     class_name    = @model.class.name.downcase
     cached_model  = @cache.get("#{class_name}:#{idempotency_key}")
 
-    return [:loaded, JSON.parse(cached_model)] if cached_model != nil
+    return [JSON.parse(cached_model), :loaded] if cached_model != nil
 
     @model.save
     @cache.set("#{class_name}:#{idempotency_key}", @model.attributes.to_json)
-    return [:created, @model]
+    return [@model, :created]
 
   end
 

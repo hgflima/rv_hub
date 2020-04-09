@@ -11,7 +11,7 @@ class Transaction < ApplicationRecord
     self.uuid = UUID.new.generate
   end
 
-  state_machine :status, initial: :processing do
+  state_machine :status, initial: :pending do
 
     after_transition :to => :authorized,    :do => :after_all_transitions
     after_transition :to => :denied,        :do => :after_all_transitions
@@ -19,8 +19,8 @@ class Transaction < ApplicationRecord
     after_transition :to => :refunded,      :do => :after_all_transitions
 
     event :authorize! do
-      transition :processing => :authorized, :if => :authorize
-      transition :processing => :denied
+      transition :pending => :authorized, :if => :authorize
+      transition :pending => :denied
     end
 
     event :capture! do
@@ -34,23 +34,23 @@ class Transaction < ApplicationRecord
   end
 
   def capture
-    puts "confirmando a transacao no cellcard"
+    #puts "confirmando a transacao no cellcard"
     return true
   end
 
   def refund
-    puts "desfazendo a transacao no cellcard"
+    #puts "desfazendo a transacao no cellcard"
     return true
   end
 
   def authorize
-    puts "efetuando autorizacao no cellcard"
+    #puts "efetuando autorizacao no cellcard"
     return true if self.amount <= 10000
     return false
   end
 
   def after_all_transitions
-    puts "salvando a transacao"
+    #puts "salvando a transacao"
     self.status_history.build(:status => self.status)
     self.save!
   end
