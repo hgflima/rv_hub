@@ -31,7 +31,11 @@ describe TransactionsController, type: :controller do
   end
 
   it "creates a transaction correctly" do
-    controller = TransactionsController.new(payload('posts_valid_transaction'), {}, {})
+    payload = payload('posts_valid_transaction')
+    payload["headers"]["IDEMPOTENCY-KEY"] = UUID.new.generate
+    
+    controller = TransactionsController.new(payload, {}, {})
+    
     responseController = controller.process!
     response = Rack::Response.new(responseController["body"], responseController["statusCode"])
     
@@ -44,20 +48,21 @@ describe TransactionsController, type: :controller do
 
   it "load transaction by the idempotency key" do
 
-    request.headers['IDEMPOTENCY-KEY'] = UUID.new.generate
-    json_request = { :carrier => "vivo",
-                     :area_code => "11",
-                     :cell_phone_number => "994145350",
-                     :amount => 1000 }
+    payload = payload('posts_valid_transaction')
+    payload["headers"]["IDEMPOTENCY-KEY"] = UUID.new.generate
+    
+    controller = TransactionsController.new(payload, {}, {})
+    
+    responseController = controller.process!
+    response = Rack::Response.new(responseController["body"], responseController["statusCode"])
 
-    post '/transactions', json_request
-
-    parsed_response     = JSON.parse(response.body)
+    parsed_response     = JSON.parse(response.body[0])
     uuid_first_request  = parsed_response['id']
 
-    post '/transactions', json_request
+    responseController = controller.process!
+    response = Rack::Response.new(responseController["body"], responseController["statusCode"])
 
-    parsed_response     = JSON.parse(response.body)
+    parsed_response     = JSON.parse(response.body[0])
     uuid_second_request = parsed_response['id']
 
     expect(response.status).to eq 200
