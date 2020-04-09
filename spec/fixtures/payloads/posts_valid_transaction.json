@@ -1,0 +1,18 @@
+{
+  "resource": "/transactions",
+  "path": "/transactions",
+  "httpMethod": "POST",
+  "pathParameters": {},
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  "requestContext": {
+    "authorizer": {
+      "claims": {
+        "client_id": "6b77sjgjegsg2vplagt554vjj7"
+      }
+    }
+  },
+  "body": "Y2Fycmllcj12aXZvMTIzJmFyZWFfY29kZT0xMSZjZWxsX3Bob25lX251bWJlcj05OTQxNDUzNTAmYW1vdW50PTEwMDA=",
+  "isBase64Encoded": true
+}
