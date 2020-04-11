@@ -3,6 +3,7 @@ class TransactionService < ApplicationService
   def authorize(idempotency_key)
 
     return [@model, :validation_error] if !@model.valid?
+    return [@model, :idempotency_key_not_present] if idempotency_key.nil?
 
     @cache        = CacheClient.new('idempotency_key')
     class_name    = @model.class.name.downcase

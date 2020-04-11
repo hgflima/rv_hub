@@ -25,12 +25,12 @@ class ApplicationPresenter
   def error
     error           = {}
     error[:code]    = @code
-    error[:errors]  = @object.errors.messages if !(@object.nil? or @object.errors.nil?)
+    error[:errors]  = @object.errors.messages if !(@object.nil? or @object.errors.blank?)
     error
   end
 
   def get_http_status
-    STATUSES[@code]
+    HTTP_STATUSES[@code]
   end
 
   # O presenter deve considerar valido os objetos que:
@@ -41,13 +41,14 @@ class ApplicationPresenter
     !@object.nil? and @object.valid? and (get_http_status < 300)
   end
 
-  STATUSES = {
-    :validation_error => 422,
-    :created => 201,
-    :loaded => 200,
-    :ok => 200,
-    :item_not_found => 404,
-    :transition_not_accepted => 422
+  HTTP_STATUSES = {
+    :validation_error             => 400,
+    :created                      => 201,
+    :loaded                       => 200,
+    :ok                           => 200,
+    :item_not_found               => 404,
+    :transition_not_accepted      => 422,
+    :idempotency_key_not_present  => 422
   }
 
 end

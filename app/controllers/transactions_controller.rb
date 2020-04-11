@@ -1,7 +1,7 @@
 class TransactionsController < ApplicationController
-  authorizer "main#RvHubCognito"
-  before_action :set_transaction, only: [:show, :delete, :capture]
-  before_action :set_account, only: [:create]
+  
+  #authorizer "main#RvHubCognito"
+  #before_action :set_account, only: [:create]
 
   # POST /transactions/:transaction_id/capture
   def capture
@@ -50,10 +50,6 @@ class TransactionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_transaction
-      @transaction = Transaction.find_by_uuid(params[:transaction_id])
-    end
 
     # Only allow a trusted parameter "white list" through.
     def transaction_params

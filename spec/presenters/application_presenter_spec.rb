@@ -4,7 +4,7 @@ describe ApplicationPresenter do
     @valid_transaction = Transaction.new(payload('valid_transaction'))
   end
 
-  it "returns an error json" do
+  it "returns validation_error" do
 
     @valid_transaction.amount = 0
 
@@ -14,7 +14,7 @@ describe ApplicationPresenter do
     presenter   = ApplicationPresenter.new(transaction, code)
     error_json  = presenter.as_json
 
-    expect(error_json[:status]).to eq(422)
+    expect(error_json[:status]).to eq(400)
     expect(error_json[:json][:code]).to eq(:validation_error)
 
   end

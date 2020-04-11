@@ -32,6 +32,12 @@ describe TransactionService do
 
   end
 
+  it "returns idempotency_key_not_present when authorize is called" do
+    service           = TransactionService.new(@valid_transaction)
+    transaction, code = service.authorize(nil)
+    expect(code).to eq(:idempotency_key_not_present)
+  end
+
   it "returns validation_error when authorize is called" do
 
     @valid_transaction.amount = 0
