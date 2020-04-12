@@ -1,7 +1,7 @@
 module V1
 
   class TransactionsController < ApplicationController
-    
+
     #authorizer "main#RvHubCognito"
     #before_action :set_account, only: [:create]
     before_action :set_pagination_params, only: [:index]
@@ -16,7 +16,7 @@ module V1
 
     # GET /transactions
     def index
-      
+
       service                               = TransactionService.new()
       transactions, code, pagination_info   = service.find_all(@page, @per_page)
       presenter                             = TransactionPresenter.new(transactions, code)
@@ -39,7 +39,7 @@ module V1
     def create
 
       transaction       = Transaction.new(transaction_params)
-      idempotency_key   = headers['idempotency-key']
+      idempotency_key   = headers['x-idempotency-key']
 
       service           = TransactionService.new(transaction)
       transaction, code = service.authorize(idempotency_key)

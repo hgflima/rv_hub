@@ -27,7 +27,7 @@ describe ApplicationPresenter do
     error_json = presenter.as_json
 
     expect(error_json[:status]).to eq(404)
-    expect(error_json[:json][:code]).to eq(:item_not_found)
+    expect(error_json[:json][:code]).to eq(:item_not_found_error)
 
   end
 
@@ -42,7 +42,7 @@ describe ApplicationPresenter do
     error_json = presenter.as_json
 
     expect(error_json[:status]).to eq(422)
-    expect(error_json[:json][:code]).to eq(:transition_not_accepted)
+    expect(error_json[:json][:code]).to eq(:transition_not_accepted_error)
 
   end
 

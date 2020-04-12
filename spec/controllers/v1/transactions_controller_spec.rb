@@ -34,7 +34,7 @@ module V1
 
     it "creates a transaction correctly" do
       payload = payload('posts_valid_transaction')
-      payload["headers"]["IDEMPOTENCY-KEY"] = UUID.new.generate
+      payload["headers"]["X-IDEMPOTENCY-KEY"] = UUID.new.generate
 
       controller = V1::TransactionsController.new(payload, {}, {})
 
@@ -51,7 +51,7 @@ module V1
     it "load transaction by the idempotency key" do
 
       payload = payload('posts_valid_transaction')
-      payload["headers"]["IDEMPOTENCY-KEY"] = UUID.new.generate
+      payload["headers"]["X-IDEMPOTENCY-KEY"] = UUID.new.generate
 
       controller = V1::TransactionsController.new(payload, {}, {})
 
@@ -90,7 +90,7 @@ module V1
       expect(response.status).to eq 404
 
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response['code']).to eq('item_not_found')
+      expect(parsed_response['code']).to eq('item_not_found_error')
 
     end
 
@@ -114,7 +114,7 @@ module V1
       expect(response.status).to eq 422
 
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response['code']).to eq('transition_not_accepted')
+      expect(parsed_response['code']).to eq('transition_not_accepted_error')
 
     end
 
@@ -136,7 +136,7 @@ module V1
       expect(response.status).to eq 404
 
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response['code']).to eq('item_not_found')
+      expect(parsed_response['code']).to eq('item_not_found_error')
 
     end
 
@@ -160,7 +160,7 @@ module V1
       expect(response.status).to eq 422
 
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response['code']).to eq('transition_not_accepted')
+      expect(parsed_response['code']).to eq('transition_not_accepted_error')
 
     end
 
