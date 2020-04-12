@@ -10,9 +10,18 @@ class ApplicationPresenter
     return { json: body, status: get_http_status }
   end
 
-  def as_json_collection
-    body = @object.map { |m| success(m) }
-    return { json: body, status: get_http_status } 
+  def as_json_collection(pagination_info)
+
+    headers = {
+      "X-Total-Items" => pagination_info[:total_items].to_s,
+      "X-Total-Pages" => pagination_info[:total_pages].to_s
+    }
+
+    body              = @object.map { |m| success(m) }
+    rendered_response = { json: body, status: get_http_status }
+
+    [rendered_response, headers]
+
   end
 
   # who extends this class must implements 'success' method

@@ -39,7 +39,15 @@ class TransactionService < ApplicationService
     return [@model, :ok]
   end
 
-  def find_all
-    [Transaction.all, :ok]
+  def find_all(page = ENV['DEFAULT_PAGE_NUMBER'], per_page = ENV['DEFAULT_ITEMS_PER_PAGE'])
+
+    total_items = Transaction.count
+    total_pages = total_pages(total_items, per_page)
+    offset      = offset(page, per_page)
+
+    transactions = Transaction.all.offset(offset).limit(per_page)
+    [transactions, :ok, {:total_items => total_items, :total_pages => total_pages}]
+
   end
+
 end

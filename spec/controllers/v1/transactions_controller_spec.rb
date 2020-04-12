@@ -35,12 +35,12 @@ module V1
     it "creates a transaction correctly" do
       payload = payload('posts_valid_transaction')
       payload["headers"]["IDEMPOTENCY-KEY"] = UUID.new.generate
-      
+
       controller = V1::TransactionsController.new(payload, {}, {})
-      
+
       responseController = controller.process!
       response = Rack::Response.new(responseController["body"], responseController["statusCode"])
-      
+
       expect(response.status).to eq 201
 
       parsed_response = JSON.parse(response.body[0])
@@ -52,9 +52,9 @@ module V1
 
       payload = payload('posts_valid_transaction')
       payload["headers"]["IDEMPOTENCY-KEY"] = UUID.new.generate
-      
+
       controller = V1::TransactionsController.new(payload, {}, {})
-      
+
       responseController = controller.process!
       response = Rack::Response.new(responseController["body"], responseController["statusCode"])
 
@@ -164,26 +164,47 @@ module V1
 
     end
 
-    it "returns correcly a collection of transactions" do
+    it "returns correcly a collection of transactions with pagination" do
 
       Transaction.destroy_all
+      valid_transaction_json = payload('valid_transaction')
 
-      tx1 = @valid_transaction
-      tx2 = Transaction.new(@valid_transaction.attributes)
+      for i in 1..10
+        tx = Transaction.new(valid_transaction_json)
+        tx.authorize!
+        tx.capture!
+      end
 
-      tx1.authorize!
-      tx1.capture!
-
-      tx2.authorize!
-      tx2.refund!
-
-      get '/v1/transactions'
-      expect(response.status).to eq 200
+      get '/v1/transactions', page: 1, per_page: 2
 
       parsed_response = JSON.parse(response.body)
+      headers         = response.headers
 
-      expect(parsed_response.first['status']).to eq('captured')
-      expect(parsed_response.last['status']).to eq('refunded')
+      expect(response.status).to eq 200
+      expect(headers["X-Total-Items"]).to eq("10")
+      expect(headers["X-Total-Pages"]).to eq("5")
+
+    end
+
+    it "returns correcly a collection of transactions with pagination (page=nil, per_page=nil)" do
+
+      Transaction.destroy_all
+      valid_transaction_json = payload('valid_transaction')
+
+      for i in 1..10
+        tx = Transaction.new(valid_transaction_json)
+        tx.authorize!
+        tx.capture!
+      end
+
+      get '/v1/transactions'
+
+      parsed_response = JSON.parse(response.body)
+      headers         = response.headers
+
+      expect(response.status).to eq 200
+      expect(headers["X-Total-Items"]).to eq("10")
+      expect(headers["X-Total-Pages"]).to eq("1")
 
     end
 

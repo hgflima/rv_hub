@@ -46,5 +46,29 @@ describe ApplicationPresenter do
 
   end
 
+  it "returns correctly pagination_info and transaction data when as_json_collection method is called" do
+
+    Transaction.destroy_all
+    valid_transaction_json = payload('valid_transaction')
+
+    for i in 1..10
+      tx = Transaction.new(valid_transaction_json)
+      tx.authorize!
+      tx.capture!
+    end
+
+    service                             = TransactionService.new()
+    transactions, code, pagination_info = service.find_all(1, 2)
+
+    presenter                   = ApplicationPresenter.new(transactions, code)
+    rendered_response, headers  = presenter.as_json_collection(pagination_info)
+
+    expect(rendered_response[:json].size).to eq(2)
+    expect(rendered_response[:status]).to eq(200)
+    expect(headers["X-Total-Items"]).to eq("10")
+    expect(headers["X-Total-Pages"]).to eq("5")
+
+  end
+
 end
 

@@ -4,6 +4,7 @@ module V1
     
     #authorizer "main#RvHubCognito"
     #before_action :set_account, only: [:create]
+    before_action :set_pagination_params, only: [:index]
 
     # POST /transactions/:transaction_id/capture
     def capture
@@ -15,10 +16,15 @@ module V1
 
     # GET /transactions
     def index
-      service             = TransactionService.new()
-      transactions, code  = service.find_all
-      presenter           = TransactionPresenter.new(transactions, code)
-      render presenter.as_json_collection
+      
+      service                               = TransactionService.new()
+      transactions, code, pagination_info   = service.find_all(@page, @per_page)
+      presenter                             = TransactionPresenter.new(transactions, code)
+      rendered_response, headers            = presenter.as_json_collection(pagination_info)
+
+      set_headers(headers)
+      render rendered_response
+
     end
 
     # GET /transactions/:transaction_id
