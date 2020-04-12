@@ -26,7 +26,7 @@ class ApplicationService
     end
 
     def total_pages(total_items, per_page)
-      puts "total_items:  #{total_items}  per_page: #{per_page}"
       (total_items * 1.0 / per_page).ceil.to_i
     end
+
 end
