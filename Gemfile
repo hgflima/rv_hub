@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "jets"
+gem "jets", path: "/Users/thiagoribeiro/Documents/Desenvolviento/aplic/jets"
 
 
 # Include mysql2 gem if you are using ActiveRecord, remove next line

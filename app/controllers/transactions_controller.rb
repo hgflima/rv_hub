@@ -1,5 +1,8 @@
 class TransactionsController < ApplicationController
-  authorizer "main#RvHubCognito"
+  
+  #authorizer "main#RvHubCognito"
+  #authorization_scopes %w[meuOvo meuovo1]
+  
   before_action :set_transaction, only: [:show, :delete, :capture]
   before_action :set_account, only: [:create]
 

@@ -27,10 +27,10 @@ Jets.application.configure do
   # }
   # More examples:
   # config.function.dead_letter_config = { target_arn: "arn" }
-  # config.function.vpc_config = {
-  #   security_group_ids: %w[sg-1 sg-2],
-  #   subnet_ids: %w[subnet-1 subnet-2],
-  # }
+  config.function.vpc_config = {
+     security_group_ids: %w[sg-0c0a4e37220dee5d0],
+     subnet_ids: %w[subnet-0a541fef5191d68ca],
+  }
   # The config.function settings to the CloudFormation Lambda Function properties.
   # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html
   # Underscored format can be used for keys to make it look more ruby-ish.
@@ -44,7 +44,7 @@ Jets.application.configure do
   # config.assets.base_url = nil # IE: https://cloudfront.com/my/base/path, defaults to the s3 bucket url
   #                                IE: https://s3-us-west-2.amazonaws.com/demo-dev-s3bucket-1inlzkvujq8zb
 
-  # config.api.endpoint_type = 'PRIVATE' # Default is 'EDGE' https://amzn.to/2r0Iu2L
+  #config.api.endpoint_type = 'EDGE' # Default is 'EDGE' https://amzn.to/2r0Iu2L
   # config.api.authorization_type = "AWS_IAM" # default is 'NONE' https://amzn.to/2qZ7zLh
 
 
