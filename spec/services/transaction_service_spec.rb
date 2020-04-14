@@ -32,6 +32,12 @@ describe TransactionService do
 
   end
 
+  it "returns idempotency_key_not_present when authorize is called" do
+    service           = TransactionService.new(@valid_transaction)
+    transaction, code = service.authorize(nil)
+    expect(code).to eq(:idempotency_key_not_present)
+  end
+
   it "returns validation_error when authorize is called" do
 
     @valid_transaction.amount = 0
@@ -146,27 +152,29 @@ describe TransactionService do
     expect(transaction.status).to eq("authorized")
   end
 
-  it "returns correctly a collection of transactions" do
+  it "returns correctly a collection of transactions with pagination" do
 
-    # gambola?
+    # gambola? - qdo outros testes estao rodando da merda aqui!
     Transaction.destroy_all
 
-    tx1 = @valid_transaction
-    tx2 = Transaction.new(@valid_transaction.attributes)
+    p = payload('valid_transaction')
 
-    tx1.authorize!
-    tx1.capture!
+    for i in 1..10
+      tx = Transaction.new(p)
+      tx.authorize!
+      tx.capture!
+    end
 
-    tx2.authorize!
-    tx2.refund!
+    page = 1
+    per_page = 2
 
-    service = TransactionService.new(nil)
-    transactions, code = service.find_all
+    service = TransactionService.new()
+    transactions, code, pagination_info = service.find_all(page, per_page)
 
     expect(code).to eq(:ok)
     expect(transactions.size).to eq(2)
-    expect(transactions.first.status).to eq('captured')
-    expect(transactions.last.status).to eq('refunded')
+    expect(pagination_info[:total_pages]).to eq(5)
+    expect(pagination_info[:total_items]).to eq(10)
 
   end
 

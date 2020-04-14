@@ -13,6 +13,7 @@ class TransactionPresenter < ApplicationPresenter
                                                         'updated_at') }
     json['links'] = get_links(obj)
     return json
+    
   end
 
   def get_links(obj)
@@ -21,6 +22,10 @@ class TransactionPresenter < ApplicationPresenter
                                             "rel"  => h['rel'],
                                             "type" => h['type']} }
     return links
+  end
+
+  def get_find_all_resource
+    'transactions'
   end
 
   HYPERMEDIA = {
