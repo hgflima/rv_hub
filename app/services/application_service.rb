@@ -8,7 +8,11 @@ class ApplicationService
 
     return [@model, :validation_error] if !@model.valid?
 
-    @cache        = CacheClient.new('idempotency_key')
+    options = {
+      :namespace => ENV['MEMCACHED_IDEMPOTENCY_NAMESPACE']
+    }
+
+    @cache        = CacheClient.new(ENV['MEMCACHED_URL'], options)
     class_name    = @model.class.name.downcase
     cached_model  = @cache.get("#{class_name}:#{idempotency_key}")
 
