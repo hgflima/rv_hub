@@ -1,8 +1,15 @@
 class CacheClient
 
-  def initialize(namespace = 'default', url = ENV['MEMCACHED_URL'], compress = true)
-    options = { :namespace => namespace, :compress => compress }
+  class InitilizationError < StandardError; end
+
+  def initialize(url = ENV['MEMCACHED_URL'], options = {})
+
+    options[:namespace] ||= ENV['MEMCACHED_DEFAULT_NAMESPACE']
+    options[:compress]  ||= ENV['MEMCACHED_COMPRESS']
+    options[:ttl]       ||= ENV['MEMCACHED_DEFAULT_TTL']
+
     @cache = Dalli::Client.new(url, options)
+
   end
 
   def set(key, value, ttl = nil)
