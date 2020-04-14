@@ -45,8 +45,14 @@ class TransactionService < ApplicationService
     total_pages = total_pages(total_items, per_page)
     offset      = offset(page, per_page)
 
-    transactions = Transaction.all.offset(offset).limit(per_page)
-    [transactions, :ok, {:total_items => total_items, :total_pages => total_pages}]
+    transactions    = Transaction.all.offset(offset).limit(per_page)
+    pagination_info = {
+      :total_items => total_items,
+      :total_pages => total_pages,
+      :page        => page,
+      :per_page    => per_page
+    } 
+    [transactions, :ok, pagination_info]
 
   end
 

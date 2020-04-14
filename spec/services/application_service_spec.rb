@@ -30,4 +30,18 @@ describe ApplicationService do
     expect(code).to eq(:validation_error)
   end
 
+  it "will return correctly the Link header field for the first page" do
+
+    valid_transaction_json = payload('valid_transaction')
+
+    for i in 1..10
+      tx = Transaction.new(valid_transaction_json)
+      tx.authorize!
+      tx.capture!
+    end
+
+    service                             = TransactionService.new()
+    transaction, code, pagination_info  = service.find_all(1, 2)
+
+  end
 end
