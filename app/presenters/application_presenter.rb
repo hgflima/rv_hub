@@ -82,6 +82,7 @@ class ApplicationPresenter
     api_version   = ENV['API_VERSION']
     finalization  = ', '
 
+    # TODO: eliminar esse monte de ifs do caralho!
     if (rel == 'first')
       page = 1
     elsif (rel == 'prev')
